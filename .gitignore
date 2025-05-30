@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.Python
+.env
+venv/
+env/
+.DS_Store # macOS specific
+*.log
+*.sqlite3 # For your local database if you don't want to commit it
+/db/vector/ # For ChromaDB data if you don't want to commit it (usually you don't)
+/models/ # For downloaded ML models if you don't want to commit them (usually you don't)
