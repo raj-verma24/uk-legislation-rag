@@ -1,0 +1,55 @@
+version: '3.8' # Specify the Docker Compose file format version
+
+services:
+  db:
+    # Use a PostgreSQL image. '13-alpine' is a good lightweight choice.
+    image: postgres:13-alpine
+    container_name: legislation_postgres_db
+    environment:
+      POSTGRES_DB: legislation_db    # Name of the database
+      POSTGRES_USER: user           # Database user
+      POSTGRES_PASSWORD: password   # Password for the user
+    volumes:
+      # Persist PostgreSQL data to a named volume to prevent data loss on container stop/remove
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      # Expose PostgreSQL port to the host (optional, only if you need to connect from your host machine)
+      - "5432:5432"
+    healthcheck:
+      # Define a healthcheck to ensure PostgreSQL is ready before the app tries to connect
+      test: ["CMD-SHELL", "pg_isready -U user -d legislation_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    # Build the Docker image from the Dockerfile in the current directory
+    build: .
+    container_name: legislation_etl_cli_app
+    # Ensure the 'db' service is healthy before starting the 'app' service
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Pass environment variables to the app container
+      DATABASE_URL: "postgresql://user:password@db:5432/legislation_db" # 'db' resolves to the PostgreSQL service
+      CHROMA_DB_PATH: "/app/db/vector" # Path inside the container for ChromaDB data
+      MODEL_PATH: "/app/models/all-MiniLM-L6-v2" # Path inside the container for the SBERT model
+      # Parameters for the ETL pipeline (can be overridden during docker run)
+      LEGISLATION_YEAR: "2024"
+      LEGISLATION_MONTH: "August"
+      LEGISLATION_CATEGORY: "planning"
+    volumes:
+      # Persist ChromaDB data to a named volume
+      - chroma_data:/app/db/vector
+      # Persist the downloaded SBERT model to a named volume to avoid re-downloading
+      - model_cache:/app/models
+    # Default command to run when starting the 'app' service with `docker-compose up`.
+    # This tells the 'docker-entrypoint.sh' script to run the 'pipeline' logic.
+    command: ["query", "What are the environmental protection regulations?"]
+
+# Define named volumes for data persistence
+volumes:
+  postgres_data: # For PostgreSQL database files
+  chroma_data:   # For ChromaDB vector database files
+  model_cache:   # For the downloaded sentence-transformers model

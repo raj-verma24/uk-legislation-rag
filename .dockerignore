@@ -1,0 +1,14 @@
+# Ignore Python virtual environments
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Ignore local data directories that shouldn't be part of the image
+# These will be mounted as volumes or created during runtime if needed
+data/
+db/
+models/
+.pytest_cache/
+.vscode/
+*.env

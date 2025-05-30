@@ -1,0 +1,7 @@
+requests
+beautifulsoup4
+sqlalchemy
+psycopg2-binary
+sentence-transformers
+torch
+chromadb
