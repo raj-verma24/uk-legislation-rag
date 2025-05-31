@@ -1,26 +1,3 @@
-UK Legislation RAG System
-1. Project Overview
-This project implements a Retrieval-Augmented Generation (RAG) system for UK legislation. It focuses on building an Extract, Transform, Load (ETL) pipeline to scrape, clean, and vectorize legislation documents, storing them in both a traditional SQL database and a vector database. A command-line interface (CLI) application then allows users to perform semantic searches on the vectorized legislation and retrieve relevant passages.
-
-The system aims to provide a robust framework for accessing and querying legal texts, making it easier to find information based on semantic similarity rather than just keywords.
-
-2. Features
-Legislation Scraping: Extracts legislation text from legislation.gov.uk.
-Data Cleaning: Processes raw HTML to extract meaningful text and metadata.
-SQL Database Storage: Stores structured legislation data (title, identifier, content, metadata) in PostgreSQL.
-Text Embedding: Converts legislation text into dense vector representations using a Sentence-Transformer model (all-MiniLM-L6-v2).
-Vector Database Storage: Stores text embeddings in ChromaDB for efficient semantic search.
-CLI Semantic Search: Allows users to query the legislation database using natural language, returning the most semantically similar passages.
-Dockerized Environment: All components are containerized using Docker and Docker Compose for easy setup, consistent environments, and portability.
-3. Project Structure
-Okay, I've reviewed your README.md content. The main issue for the project structure is that it's just plain text, not formatted as a code block, and the "Bash" and "YAML" labels are also not part of proper Markdown code block syntax.
-
-I've made the necessary formatting corrections and added a few minor improvements for clarity and emphasis.
-
-Here's the revised README.md content for you to use:
-
-Markdown
-
 # UK Legislation RAG System
 
 ## 1. Project Overview
