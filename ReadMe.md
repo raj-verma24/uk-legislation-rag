@@ -13,15 +13,40 @@ Vector Database Storage: Stores text embeddings in ChromaDB for efficient semant
 CLI Semantic Search: Allows users to query the legislation database using natural language, returning the most semantically similar passages.
 Dockerized Environment: All components are containerized using Docker and Docker Compose for easy setup, consistent environments, and portability.
 3. Project Structure
+Okay, I've reviewed your README.md content. The main issue for the project structure is that it's just plain text, not formatted as a code block, and the "Bash" and "YAML" labels are also not part of proper Markdown code block syntax.
+
+I've made the necessary formatting corrections and added a few minor improvements for clarity and emphasis.
+
+Here's the revised README.md content for you to use:
+
+Markdown
+
+# UK Legislation RAG System
+
+## 1. Project Overview
+This project implements a Retrieval-Augmented Generation (RAG) system for UK legislation. It focuses on building an Extract, Transform, Load (ETL) pipeline to scrape, clean, and vectorize legislation documents, storing them in both a traditional SQL database and a vector database. A command-line interface (CLI) application then allows users to perform semantic searches on the vectorized legislation and retrieve relevant passages.
+
+The system aims to provide a robust framework for accessing and querying legal texts, making it easier to find information based on semantic similarity rather than just keywords.
+
+## 2. Features
+* **Legislation Scraping:** Extracts legislation text from `legislation.gov.uk`.
+* **Data Cleaning:** Processes raw HTML to extract meaningful text and metadata.
+* **SQL Database Storage:** Stores structured legislation data (title, identifier, content, metadata) in PostgreSQL.
+* **Text Embedding:** Converts legislation text into dense vector representations using a Sentence-Transformer model (`all-MiniLM-L6-v2`).
+* **Vector Database Storage:** Stores text embeddings in ChromaDB for efficient semantic search.
+* **CLI Semantic Search:** Allows users to query the legislation database using natural language, returning the most semantically similar passages.
+* **Dockerized Environment:** All components are containerized using Docker and Docker Compose for easy setup, consistent environments, and portability.
+
+## 3. Project Structure
 .
 ├── cli/
-│   ├── __init__.py
+│   ├── init.py
 │   └── query.py           # CLI application for semantic search
 ├── db/
 │   ├── sql/               # Placeholder for local SQLite (if used)
 │   └── vector/            # Persistent storage for ChromaDB data
 ├── etl/
-│   ├── __init__.py
+│   ├── init.py
 │   ├── cleaner.py         # Cleans HTML and extracts metadata
 │   ├── database.py        # Handles SQL database interactions (PostgreSQL)
 │   ├── embeddings.py      # Manages embedding model loading and generation
@@ -34,133 +59,132 @@ Dockerized Environment: All components are containerized using Docker and Docker
 ├── docker-entrypoint.sh   # Entrypoint script for Docker container commands
 └── requirements.txt       # Python dependencies
 
-4. Technologies Used
-Python 3.12+
-Docker & Docker Compose
-PostgreSQL: Relational database for structured legislation data.
-ChromaDB: Vector database for storing and searching embeddings.
-requests & BeautifulSoup4: For web scraping.
-sentence-transformers: For generating text embeddings (all-MiniLM-L6-v2 model).
-SQLAlchemy: ORM for database interactions.
-psycopg2-binary: PostgreSQL adapter for Python.
-Typer (Optional, for advanced CLI): Used for building the CLI (though argparse or basic sys.argv could also be used).
+## 4. Technologies Used
+* Python 3.12+
+* Docker & Docker Compose
+* PostgreSQL: Relational database for structured legislation data.
+* ChromaDB: Vector database for storing and searching embeddings.
+* `requests` & `BeautifulSoup4`: For web scraping.
+* `sentence-transformers`: For generating text embeddings (`all-MiniLM-L6-v2` model).
+* `SQLAlchemy`: ORM for database interactions.
+* `psycopg2-binary`: PostgreSQL adapter for Python.
+* `Typer` (Optional, for advanced CLI): Used for building the CLI (though `argparse` or basic `sys.argv` could also be used).
 
-5. Setup and Installation
-Prerequisites
+## 5. Setup and Installation
+
+### Prerequisites
 Before you begin, ensure you have the following installed on your system:
+* **Python 3.12.x (or 3.9+):** Download from [python.org](https://www.python.org/). Make sure to add it to your system PATH during installation.
+* **Git:** Download from [git-scm.com](https://git-scm.com/).
+* **Docker Desktop for Windows:** Download from [docker.com](https://www.docker.com/products/docker-desktop/). Ensure WSL 2 is enabled and configured correctly.
 
-Python 3.12.x (or 3.9+): Download from python.org. Make sure to add it to your system PATH during installation.
-Git: Download from git-scm.com.
-Docker Desktop for Windows: Download from docker.com. Ensure WSL 2 is enabled and configured correctly.
-Local Development Setup (Recommended for coding and debugging)
-Clone the repository:
+### Local Development Setup (Recommended for coding and debugging)
 
-Bash
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/YOUR_USERNAME/your-repo-name.git](https://github.com/YOUR_USERNAME/your-repo-name.git) # Replace with your actual repo URL
+    cd your-repo-name # Navigate into the cloned directory
+    ```
 
-cd to your project directory 
-cd C:\Projects\uk-legislation-rag to your project directory
+2.  **Create and activate a Python virtual environment:**
+    ```bash
+    python -m venv venv
+    .\venv\Scripts\activate.bat   # For Command Prompt
+    # .\venv\Scripts\activate      # For PowerShell (if execution policy allows)
+    # source venv/bin/activate    # For Linux/macOS
+    ```
 
-Create and activate a Python virtual environment:
+3.  **Upgrade pip and essential packaging tools:**
+    ```bash
+    pip install --upgrade pip setuptools wheel
+    ```
 
-Bash
+4.  **Install Python dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-python -m venv venv
-.\venv\Scripts\activate.bat   # For Command Prompt
-# .\venv\Scripts\activate      # For PowerShell (if execution policy allows)
-Upgrade pip and essential packaging tools:
+5.  **Start the PostgreSQL database via Docker Compose:**
+    In a **separate terminal or command prompt window** (keep it running), navigate to your project root and start only the database service:
+    ```bash
+    docker-compose up db
+    ```
+    Ensure the `db` service is healthy before proceeding.
 
-Bash
+6.  **Run ETL pipeline locally (for testing):**
+    Once the database is up and running in the separate terminal, you can run your pipeline directly from your activated `venv`:
+    ```bash
+    python etl/pipeline.py
+    ```
 
-pip install --upgrade pip setuptools wheel
-Install Python dependencies:
+7.  **Run CLI query locally (for testing):**
+    After the pipeline completes:
+    ```bash
+    python cli/query.py "What are the rules regarding planning permission for extensions?"
+    ```
+    (Replace with your desired query.)
 
-Bash
+### Dockerized Setup (For building and running the complete system)
 
-pip install -r requirements.txt
-Start the PostgreSQL database via Docker Compose:
-In a separate terminal or command prompt window (keep it running), navigate to your project root and start only the database service:
+1.  Ensure Docker Desktop is running.
 
-Bash
+2.  **Navigate to your project root:**
+    ```bash
+    cd C:\Projects\uk-legislation-rag # Or the equivalent path on your system
+    ```
 
-docker-compose up db
-Ensure the db service is healthy before proceeding.
+3.  **Build Docker images:**
+    This will build the `app` image and set up the `db` service. The first time might take a while as it downloads base images and the embedding model.
+    ```bash
+    docker-compose build
+    ```
 
-Run ETL pipeline locally (for testing):
-Once the database is up, you can run your pipeline directly from your activated (venv):
+4.  **Run the ETL pipeline:**
+    This will start both the PostgreSQL and application containers. The app container will execute the ETL process.
+    ```bash
+    docker-compose up app
+    ```
+    Monitor the logs in your terminal. The process might take some time depending on the amount of legislation scraped and processed.
 
-Bash
+5.  **Run a semantic search query:**
+    Once the ETL pipeline has successfully completed and populated the databases:
 
-python etl/pipeline.py
-Run CLI query locally (for testing):
-After the pipeline completes:
+    **Option A (Modify `docker-compose.yml`):**
+    Edit your `docker-compose.yml` file and change the `command` for the `app` service to run the query instead of the pipeline:
+    ```yaml
+        app:
+          # ...
+          command: ["query", "liability to a high income child benefit charge"] # Replace with your query
+    ```
+    Save the file, then run:
+    ```bash
+    docker-compose up app
+    ```
 
-Bash
+    **Option B (Direct Docker run - useful for quick, one-off queries):**
+    First, stop any running `docker-compose up` (Ctrl+C).
+    Then, execute the command directly on the built image:
+    ```bash
+    docker run --rm legislation_etl_cli_app query "liability to a high income child benefit charge"
+    ```
+    (Replace `legislation_etl_cli_app` if your image name is different, and your query string).
 
-python cli/query.py "What are the rules regarding planning permission for extensions?"
-(Replace with your desired query.)
+## 6. How to Use
 
-Dockerized Setup (For building and running the complete system)
-Ensure Docker Desktop is running.
-
-Navigate to your project root:
-
-Bash
-
-cd C:\Projects\uk-legislation-rag
-Build Docker images:
-This will build the app image and set up the db service. The first time might take a while as it downloads base images and the embedding model.
-
-Bash
-
-docker-compose build
-Run the ETL pipeline:
-This will start both the PostgreSQL and application containers. The app container will execute the ETL process.
-
-Bash
-
-docker-compose up app
-Monitor the logs in your terminal. The process might take some time depending on the amount of legislation scraped and processed.
-
-Run a semantic search query:
-Once the ETL pipeline has successfully completed and populated the databases:
-
-Option A (Modify docker-compose.yml):
-Edit your docker-compose.yml file and change the command for the app service to run the query:
-
-YAML
-
-    app:
-      # ...
-      command: ["query", "liability to a high income child benefit charge"] # Replace with your query
-Save the file, then run:
-
-Bash
-
-docker-compose up app
-Option B (Direct Docker run - useful for quick, one-off queries):
-First, stop any running docker-compose up (Ctrl+C).
-Then, execute the command directly on the built image:
-
-Bash
-
-docker run --rm legislation_etl_cli_app query "liability to a high income child benefit charge"
-(Replace legislation_etl_cli_app if your image name is different, and your query string).
-
-6. How to Use
-ETL Pipeline
+### ETL Pipeline
 The ETL pipeline is designed to be run once initially to populate the databases. It can also be re-run to update existing or add new legislation data.
 
-To run ETL locally: python etl/pipeline.py (after setting up local DB)
-To run ETL via Docker: docker-compose up app (with command: ["pipeline"] in docker-compose.yml)
-Semantic Search CLI
+* **To run ETL locally:** `python etl/pipeline.py` (after setting up local DB)
+* **To run ETL via Docker:** Ensure `command: ["pipeline"]` is set for the `app` service in `docker-compose.yml`, then run `docker-compose up app`.
+
+### Semantic Search CLI
 After the data is loaded into the vector database, you can use the CLI for semantic search.
 
-To query locally: python cli/query.py "Your search query"
-To query via Docker: Adjust docker-compose.yml command or use docker run as described in the Dockerized Setup section.
-Example Query:
+* **To query locally:** `python cli/query.py "Your search query"`
+* **To query via Docker:** Adjust `docker-compose.yml` command or use `docker run` as described in the Dockerized Setup section.
 
-Bash
-
+**Example Query:**
+```bash
 # Locally
 python cli/query.py "What are the environmental impact assessment requirements for new construction?"
 
